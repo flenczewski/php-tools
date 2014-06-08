@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  *  Timer - oblicza różnicę pomiędzy dowolnymi markerami czasu
  *  
@@ -7,19 +7,19 @@
  *  @version: 1.0 - 2009-03-27
  */
 
-class timer
+class Timer
 {
+
     /**
      * Konstruktor
      * 
-     * @param bool $init - czy zacząć pomiar
+     * @param bool $init - czy zacząc pomiar
+     * @return void
      */
- 
-    function timer( $init = false )
-    {
+    function __construct($init = null) {
         isset($init) ? $this->start() : null;
     }
- 
+    
     /**
      * Rozpoczęcie pomiaru
      * 
@@ -29,29 +29,37 @@ class timer
     {
         $this->setMarker('start');
     }
-     
+    
+
     /**
      * Zakończenie pomiaru
      * 
-     * @param bool $return - czy zwrócić czas wykonywania (start-stop)
-     * @return float
+     * @param bool $return - czy zwrócić czas wykonywania
+     * @param bool $show   - czy wyświetlić czas wykonywania
+     * @return void / float
      */
-    function stop( $return = false )
+    function stop( $return = false, $show = false )
     {
         // ustawiamy marker
         $this->setMarker('stop');
-         
+        
+        // wyświetlamy
+        if( $show == true )
+        {
+        	echo $this->display();
+        }
+
         //zwracamy wynik
         if( $return == true )
         {
-            return $this->display();
+        	return $this->display();
         }
     }
- 
-     
+
+    
     /**
      * Ustawianie markera
-     * jeżeli nazwa jest już wykorzystana, ustawiana jest nowa na podstawie czasu
+     * jeżeli nazwa jest już wykorzystana, ustawiana jest nowa na podstawie czsu
      * 
      * @param string $name - nazwa markera
      * @return void
@@ -60,14 +68,15 @@ class timer
     {
         if( isset( $this->$name ) ) 
         {
-            $name = '_'. time();
+        	$name = '_'. time();
         }
-         
+    	
         $timeofday   = gettimeofday();
-        $this->$name = ($timeofday['sec'] + ($timeofday['usec'] / 1000000));
+    	$this->$name = ($timeofday['sec'] + ($timeofday['usec'] / 1000000));
     }
-     
+    
     /**
+     * 
      * Wyświetla różnicę czasu w markerach
      * 
      * @param string $marker1 - nazwa pierwszego markera
@@ -76,39 +85,41 @@ class timer
      */
     function display( $marker1 = 'start', $marker2 = 'stop')
     {
-        return number_format( ($this->$marker2) - ($this->$marker1), 5 );
+        return number_format( ($this->$marker2) - ($this->$marker1), 6 );
     }
- 
-     
+
+    
     /**
-     * Oblicza różnicę czasu pomiędzy wszystkimi markerami
+     * Oblicza różnicę czasu pomiedzy wszystkimi markerami
      * 
      * @param bool $hidden - czy zwrócić dane jako tablica (true) czy jako wyświetlić jako html (false)
-     * @return array
+     * @return array / void
      */
-    function total( $show = false )
+    function show( $hidden = false )
     {
-        $last_used_marker = 'start';
-        $data        = array();
-        $html        = null;
- 
-        foreach( $this as $key => $value )
-        {
-            $data['markers'][$key]  = $this->display( $last_used_marker, $key );
-            $last_used_marker       = $key;
-            $html .= '<b>'. $data['markers'][$key] . '</b> - '. $key ."<br />";
-        }
-        $data['summery'] = $this->display();
-        $html .= '<b>'. $data['summery'] . " - total execution time</b>";
- 
-        if( $show == false )
-        {
-            return $data;
-        }
-        else
-        {
-            echo $html;
-        }
+    	$last_used_marker = 'start';
+    	$data 	 	 = array();
+    	$html 		 = null;
+
+    	foreach( $this as $key => $value )
+    	{
+    		$data['markers'][$key]  = $this->display( $last_used_marker, $key );
+    		$last_used_marker 		= $key;
+    		$html .= '<b>'. $data['markers'][$key] . '</b> - '. $key ."<br />";
+    	}
+    	$data['summery'] = $this->display();
+		$html .= '<b>'. $data['summery'] . " - total execution time</b>";
+
+		if( $hidden == true )
+		{
+			return $data;
+		}
+		else
+		{
+			echo $html;
+		}
     }
+
+
 }
-?>
+
