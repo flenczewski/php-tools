@@ -1,6 +1,11 @@
 class String
 {
-
+    /**
+     * Automagicznie adresy URL w tekście stają się klikalne
+     * 
+     * @param string $text
+     * @return string
+     */
     public static function clickable($text)
     {
         $ret = ' ' . $text;
