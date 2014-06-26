@@ -17,6 +17,30 @@ class String
         return $ret;
     }
 
+    /**
+     * Jeżeli adres URL jest dłuższy niż $maxLength - zamienia jego srodek na $mask
+     * - tak aby łączna długość nie przekraczała $maxLength - strlen($mask)
+     * 
+     * @param string $url		- adres strony
+     * @param int $max_length	- długość
+     * @param string $mask		- maska
+     * @return string
+     */
+	function getShortViewUrl( $url, $maxLength = 45, $mask = '[ ... ]' )
+    {
+        $length    = strlen($url);
+        $maxLength = intval($maxLength);
+
+        if($length > $maxLength) {
+            $length = $length - ceil($maxLength/3*2);
+            $first  = substr($url, 0, -$length);
+            $last   = substr($url, -ceil($length/2));
+            return $first . $mask . $last;
+        } else {
+            return $url;
+        }
+    }
+
 
     /**
      * Zwraca sformatowaną wielkosc pliku
