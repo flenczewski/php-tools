@@ -1,13 +1,26 @@
+<?php
+
+
 class String
 {
+
+    public static function truncate($string, $end) {
+        if (strlen($string) > $end) {
+            $string = preg_replace('/\s+?(\S+)?$/', '', substr($string, 0, $end+1)); 
+            $string = substr($string, 0, $end) ."...";
+        }
+
+        return $string;
+    }
+    
+    
     /**
      * Automagicznie adresy URL w tekście stają się klikalne
      * 
      * @param string $text
      * @return string
      */
-    public static function clickable($text)
-    {
+    public static function clickable($text) {
         $ret = ' ' . $text;
         $ret = preg_replace("#(^|[\n ])([\w]+?://[\w]+[^ \"\n\r\t<]*)#ise", "'\\1<a href=\"\\2\" >\\2</a>'", $ret);
         $ret = preg_replace("#(^|[\n ])((www|ftp)\.[^ \"\t\n\r<]*)#ise", "'\\1<a href=\"http://\\2\" >\\2</a>'", $ret);
@@ -26,8 +39,7 @@ class String
      * @param string $mask		- maska
      * @return string
      */
-	function getShortViewUrl( $url, $maxLength = 45, $mask = '[ ... ]' )
-    {
+    function getShortViewUrl( $url, $maxLength = 45, $mask = '[ ... ]' ) {
         $length    = strlen($url);
         $maxLength = intval($maxLength);
 
@@ -47,8 +59,7 @@ class String
      * 
      * @return string
      */
-    public static function viewFileSize($size, $precision=2, $longName=true, $realSize=true)
-    {
+    public static function viewFileSize($size, $precision=2, $longName=true, $realSize=true) {
         $pos  = 0;
         $base = $realSize ? 1024 : 1000;
 
